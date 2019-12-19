@@ -10,40 +10,42 @@ require __DIR__."./config.php";
 ?>
 
 <?php
-    //if(!empty($_POST)):
+    //if(!empty($_POST))
     // $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     // $email = $_POST["email"];
     // $password = md5($_POST["password"]);
-    try{
-        if(isset($_POST['login']))
+    try
+    {
+        if(!empty($_POST))
         {
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $email = $_POST["email"];
             $password = md5($_POST["password"]);
         //checking for unique index
-        // $uniqueSql = "SELECT id FROM data WHERE email = :email";
-        // $uniqueStmt = $conn->prepare($uniqueSql);
-        // $uniqueStmt->execute([':email' => $email]);
-        // if($uniqueStmt->rowCount() == 0){
+            $uniqueSql = "SELECT id FROM data WHERE email = :email";
+            $uniqueStmt = $conn->prepare($uniqueSql);
+            $uniqueStmt->execute([':email' => $email]);
+            if($uniqueStmt->rowCount() == 0)
+            {
             // Sql for Register User
-            $sql = 'INSERT INTO data (email, password) VALUES(:email, :password)';
-            $stmt = $conn->prepare($sql);
-            $stmt->bindParam(':email',$email);
-            $stmt->bindParam(':password',$password);
-            $stmt->execute();
+                $sql = 'INSERT INTO data (email, password) VALUES(:email, :password)';
+                $stmt = $conn->prepare($sql);
+                $stmt->execute([':email' => $email, ':password' => $password]);
 
-            // if($stmt->rowCount() > 0)
-            // {
-            //     // $_SESSION['login'] = $email;
-            //    // header('location:http://localhost/loginform/dashboard.php');
-            // }else
-            // {
-            //     echo "There was a Problem while Submitting Your Data. Please Try Again. ERROR CODE 001";
+            if($stmt->rowCount() > 0)
+            {
+                $_SESSION['login'] = $email;
+               header('location:http://localhost/loginform/dashboard.php');
+            }else
+            {
+                echo "There was a Problem while Submitting Your Data. Please Try Again. ERROR CODE 001";
 
-            // }
-        // }else{
-        //     echo "This Email Is Already Registered";
-         }
+            }
+        }
+        else{
+            echo "This Email Is Already Registered";
+            }
+        }
     }
     catch(PDOException $e)
         {

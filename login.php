@@ -11,6 +11,8 @@ if (isset($_POST['email'])){
     $picdata = "SELECT * FROM data WHERE email = :email";
     $stmt = $conn->prepare($picdata);
     $stmt->execute([':email' => $email]);
+    //to count how many rows r found and then put it in the rows variable
+    $rows = $stmt->rowCount();
     
         if($rows==1){
             $_SESSION['login'] = $email;
@@ -35,7 +37,7 @@ if (isset($_POST['email'])){
 
             <div class="form">
             <h1>Log In</h1>
-            <form action="register.php" method="post">
+            <form action="" method="post">
             Email Please:
             <input type="text" name="email" placeholder="Email" required /></br></br>
             Password Please:
